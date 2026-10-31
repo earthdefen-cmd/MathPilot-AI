@@ -49,7 +49,13 @@ function solveProblem() {
         result = first / second;
         explanation = `${first} ÷ ${second} = ${result}`;
     }
-
+   if (currentMode === "quick") {
+    answer.innerHTML = `
+        <strong>Quick Answer</strong><br><br>
+        ${first} ${operator} ${second} = ${result}<br><br>
+        <strong>Final answer: ${result}</strong>
+    `;
+} else {
     answer.innerHTML = `
         <strong>Question:</strong> ${first} ${operator} ${second}<br><br>
         <strong>Step-by-step solution:</strong><br>
@@ -59,20 +65,4 @@ function solveProblem() {
         <strong>Final answer: ${result}</strong>
     `;
 }
-let currentMode = "learn";
-
-function setMode(mode) {
-    currentMode = mode;
-
-    const message = document.getElementById("mode-message");
-
-    if (mode === "learn") {
-        message.textContent =
-            "Learn Mode: Get detailed, step-by-step explanations and understand mathematics.";
-    }
-
-    else if (mode === "quick") {
-        message.textContent =
-            "Quick Solve: Get fast answers with concise working.";
-    }
-}
+ 
