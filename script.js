@@ -1,30 +1,61 @@
 function solveProblem() {
-    const question = document.querySelector("textarea").value;
+    const question = document.querySelector("textarea").value.trim();
     const answer = document.querySelector(".answer p");
 
-    if (question.trim() === "") {
+    if (question === "") {
         answer.textContent = "Please enter a question.";
         return;
     }
 
-    try {
-        const expression = question.replace(/\s+/g, "");
+    const expression = question.replace(/\s+/g, "");
 
-        if (!/^[0-9+\-*/().]+$/.test(expression)) {
-            answer.textContent = "Please enter a valid basic maths calculation.";
-            return;
-        }
-
-        const result = Function('"use strict"; return (' + expression + ')')();
-
-        if (!Number.isFinite(result)) {
-            answer.textContent = "This calculation has no valid answer.";
-            return;
-        }
-
-        answer.textContent = "Answer: " + result;
-
-    } catch (error) {
-        answer.textContent = "Invalid calculation. Please try again.";
+    if (!/^\d+(\.\d+)?[+\-*/]\d+(\.\d+)?$/.test(expression)) {
+        answer.textContent = "Please enter a calculation like 25 + 12.";
+        return;
     }
+
+    const match = expression.match(
+        /^(\d+(?:\.\d+)?)([+\-*/])(\d+(?:\.\d+)?)$/
+    );
+
+    const first = Number(match[1]);
+    const operator = match[2];
+    const second = Number(match[3]);
+
+    let result;
+    let explanation = "";
+
+    if (operator === "+") {
+        result = first + second;
+        explanation = `${first} + ${second} = ${result}`;
+    }
+
+    else if (operator === "-") {
+        result = first - second;
+        explanation = `${first} - ${second} = ${result}`;
+    }
+
+    else if (operator === "*") {
+        result = first * second;
+        explanation = `${first} × ${second} = ${result}`;
+    }
+
+    else if (operator === "/") {
+        if (second === 0) {
+            answer.textContent = "You cannot divide by zero.";
+            return;
+        }
+
+        result = first / second;
+        explanation = `${first} ÷ ${second} = ${result}`;
+    }
+
+    answer.innerHTML = `
+        <strong>Question:</strong> ${first} ${operator} ${second}<br><br>
+        <strong>Step-by-step solution:</strong><br>
+        1. Identify the two numbers: ${first} and ${second}.<br>
+        2. Identify the operation: ${operator}.<br>
+        3. Calculate: ${explanation}.<br><br>
+        <strong>Final answer: ${result}</strong>
+    `;
 }
