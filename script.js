@@ -59,3 +59,20 @@ function solveProblem() {
         <strong>Final answer: ${result}</strong>
     `;
 }
+let currentMode = "learn";
+
+function setMode(mode) {
+    currentMode = mode;
+
+    const message = document.getElementById("mode-message");
+
+    if (mode === "learn") {
+        message.textContent =
+            "Learn Mode: Get detailed, step-by-step explanations and understand mathematics.";
+    }
+
+    else if (mode === "quick") {
+        message.textContent =
+            "Quick Solve: Get fast answers with concise working.";
+    }
+}
