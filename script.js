@@ -1,8 +1,11 @@
+
+let currentMode = "learn";
+
 function solveProblem() {
     const question = document.querySelector("textarea").value.trim();
     const answer = document.querySelector(".answer p");
 
-    if (question === "") {
+    if (!question) {
         answer.textContent = "Please enter a question.";
         return;
     }
@@ -23,46 +26,44 @@ function solveProblem() {
     const second = Number(match[3]);
 
     let result;
-    let explanation = "";
+    let explanation;
 
-    if (operator === "+") {
-        result = first + second;
-        explanation = `${first} + ${second} = ${result}`;
+    switch (operator) {
+        case "+":
+            result = first + second;
+            explanation = `${first} + ${second} = ${result}`;
+            break;
+
+        case "-":
+            result = first - second;
+            explanation = `${first} - ${second} = ${result}`;
+            break;
+
+        case "*":
+            result = first * second;
+            explanation = `${first} × ${second} = ${result}`;
+            break;
+
+        case "/":
+            if (second === 0) {
+                answer.textContent = "You cannot divide by zero.";
+                return;
+            }
+            result = first / second;
+            explanation = `${first} ÷ ${second} = ${result}`;
+            break;
     }
 
-    else if (operator === "-") {
-        result = first - second;
-        explanation = `${first} - ${second} = ${result}`;
+    if (currentMode === "quick") {
+        answer.textContent =
+            `Quick Answer\n\n${first} ${operator} ${second} = ${result}\n\nFinal answer: ${result}`;
+    } else {
+        answer.textContent =
+            `Question: ${first} ${operator} ${second}\n\n` +
+            `Step-by-step solution:\n` +
+            `1. Identify the two numbers: ${first} and ${second}.\n` +
+            `2. Identify the operation: ${operator}.\n` +
+            `3. Calculate: ${explanation}.\n\n` +
+            `Final answer: ${result}`;
     }
-
-    else if (operator === "*") {
-        result = first * second;
-        explanation = `${first} × ${second} = ${result}`;
-    }
-
-    else if (operator === "/") {
-        if (second === 0) {
-            answer.textContent = "You cannot divide by zero.";
-            return;
-        }
-
-        result = first / second;
-        explanation = `${first} ÷ ${second} = ${result}`;
-    }
-   if (currentMode === "quick") {
-    answer.innerHTML = `
-        <strong>Quick Answer</strong><br><br>
-        ${first} ${operator} ${second} = ${result}<br><br>
-        <strong>Final answer: ${result}</strong>
-    `;
-} else {
-    answer.innerHTML = `
-        <strong>Question:</strong> ${first} ${operator} ${second}<br><br>
-        <strong>Step-by-step solution:</strong><br>
-        1. Identify the two numbers: ${first} and ${second}.<br>
-        2. Identify the operation: ${operator}.<br>
-        3. Calculate: ${explanation}.<br><br>
-        <strong>Final answer: ${result}</strong>
-    `;
 }
- 
