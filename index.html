@@ -1,45 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MathPilot AI</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
 
-    <h1>MathPilot AI</h1>
+let currentMode = "learn";
 
-    <p>Your personal AI mathematics assistant.</p>
+function setMode(mode) {
+    currentMode = mode;
 
-    <div class="solver">
-        <h2>What mathematics problem are you solving?</h2>
-        <div class="modes">
-    <button onclick="setMode('learn')">
-        Learn Mode
-    </button>
+    const message = document.getElementById("mode-message");
 
-    <button onclick="setMode('quick')">
-        Quick Solve
-    </button>
-</div>
+    if (mode === "learn") {
+        message.textContent =
+            "Learn Mode: Get a step-by-step explanation of your solution.";
+    } else {
+        message.textContent =
+            "Quick Solve: Get your answer immediately.";
+    }
+}
 
-<p id="mode-message">
-    Choose how you want to solve mathematics.
-</p>
+function solveProblem() {
+    const question = document.querySelector("textarea").value.trim();
+    const answer = document.querySelector(".answer p");
 
-        <textarea
-            placeholder="Enter your mathematics question here..."
-            rows="5">
-        </textarea>
+    if (!question) {
+        answer.textContent = "Please enter a question.";
+        return;
+    }
 
-        <button onclick="solveProblem()">Solve Problem</button>
+    const expression = question.replace(/\s+/g, "");
 
-        <div class="answer">
-            <h3>Your Solution</h3>
-            <p>Your answer will appear here.</p>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+    const match = expression.match(
+        /^(\d+(?:\.\d+)?)([+\-*/])(\d+(?:\.\d+)?)$/
+    );
+
+    if (!match) {
+        answer.textContent =
+            "Please enter a calculation like 25 + 12.";
+        return;
+    }
+
+    const first = Number(match[1]);
+    const operator = match[2];
+    const second = Number(match[3]);
+
+    let result;
+    let explanation;
+
+    switch (operator) {
+        case "+":
+            result = first + second;
+            explanation = `${first} + ${second} = ${result}`;
+            break;
+
+        case "-":
+            result = first - second;
+            explanation = `${first} - ${second} = ${result}`;
+            break;
+
+        case "*":
+            result = first * second;
+            explanation = `${first} × ${second} = ${result}`;
+            break;
+
+        case "/":
+            if (second === 0) {
+                answer.textContent = "Cannot divide by zero.";
+                return;
+            }
+            result = first / second;
+            explanation = `${first} ÷ ${second} = ${result}`;
+            break;
+    }
+
+    if (currentMode === "quick") {
+        answer.textContent =
+            `Quick Answer\n\n${first} ${operator} ${second} = ${result}\n\nFinal answer: ${result}`;
+    } else {
+        answer.textContent =
+            `Question: ${first} ${operator} ${second}\n\n` +
+            `Step-by-step solution:\n` +
+            `1. Identify the numbers: ${first} and ${second}.\n` +
+            `2. Identify the operation: ${operator}.\n` +
+            `3. Calculate: ${explanation}.\n\n` +
+            `Final answer: ${result}`;
+    }
+}
